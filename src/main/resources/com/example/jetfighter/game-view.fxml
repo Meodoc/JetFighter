@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.Label?>
+<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.jetfighter.GameController"
+      onKeyPressed="#onKeyPressed"
+      onKeyReleased="#onKeyReleased"
+      style="-fx-background-color: #302c2c">
+    <Pane fx:id="gamePane">
+        <Label fx:id="jet1Score"/>
+        <Label fx:id="jet2Score"/>
+        <Label fx:id="statusMsg"/>
+    </Pane>
+</VBox>
