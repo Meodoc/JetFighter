@@ -14,7 +14,6 @@ import javafx.scene.shape.Circle
 import javafx.scene.text.Font
 import javafx.scene.text.Text
 import javafx.scene.text.TextAlignment
-import java.io.FileInputStream
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -146,10 +145,13 @@ class GameController {
     var bullets1 = mutableSetOf<Bullet>()
     var bullets2 = mutableSetOf<Bullet>()
 
-    private var rotLeft1 = false
-    private var rotRight1 = false
-    private var rotLeft2 = false
-    private var rotRight2 = false
+    private var jet1RotLeft = false
+    private var jet1RotRight = false
+    private var jet2RotLeft = false
+    private var jet2RotRight = false
+    private var jet1Fired = false
+    private var jet2Fired = false
+
     private var gameState = PAUSED
 
     @FXML
@@ -207,30 +209,36 @@ class GameController {
     }
 
     private fun updateRotations() {
-        if (rotLeft1)
+        if (jet1RotLeft)
             rot1 -= rotSpeed
-        if (rotRight1)
+        if (jet1RotRight)
             rot1 += rotSpeed
-        if (rotLeft2)
+        if (jet2RotLeft)
             rot2 -= rotSpeed
-        if (rotRight2)
+        if (jet2RotRight)
             rot2 += rotSpeed
     }
 
     @FXML
     fun onKeyPressed(e: KeyEvent) {
         when (e.code) {
-            KeyCode.A -> rotLeft1 = true
-            KeyCode.D -> rotRight1 = true
-            KeyCode.LEFT -> rotLeft2 = true
-            KeyCode.RIGHT -> rotRight2 = true
+            KeyCode.A -> jet1RotLeft = true
+            KeyCode.D -> jet1RotRight = true
+            KeyCode.LEFT -> jet2RotLeft = true
+            KeyCode.RIGHT -> jet2RotRight = true
             KeyCode.SPACE -> {
-                val bullet = gamePane.spawnBullet(jet1.centerX, jet1.centerY, rot1, color = Color.BLACK, speed = bulletSpeed, life = bulletLifespan)
-                bullets1.add(bullet)
+                if (!jet1Fired) {
+                    val bullet = gamePane.spawnBullet(jet1.centerX, jet1.centerY, rot1, color = Color.BLACK, speed = bulletSpeed, life = bulletLifespan)
+                    bullets1.add(bullet)
+                    jet1Fired = true
+                }
             }
             KeyCode.ENTER -> {
-                val bullet = gamePane.spawnBullet(jet2.centerX, jet2.centerY, rot2, color = Color.WHITE, speed = bulletSpeed, life = bulletLifespan)
-                bullets2.add(bullet)
+                if (!jet2Fired) {
+                    val bullet = gamePane.spawnBullet(jet2.centerX, jet2.centerY, rot2, color = Color.WHITE, speed = bulletSpeed, life = bulletLifespan)
+                    bullets2.add(bullet)
+                    jet2Fired = true
+                }
             }
             KeyCode.ESCAPE -> {
                 when (gameState) {
@@ -254,10 +262,12 @@ class GameController {
     @FXML
     fun onKeyReleased(e: KeyEvent) {
         when (e.code) {
-            KeyCode.A -> rotLeft1 = false
-            KeyCode.D -> rotRight1 = false
-            KeyCode.LEFT -> rotLeft2 = false
-            KeyCode.RIGHT -> rotRight2 = false
+            KeyCode.A -> jet1RotLeft = false
+            KeyCode.D -> jet1RotRight = false
+            KeyCode.LEFT -> jet2RotLeft = false
+            KeyCode.RIGHT -> jet2RotRight = false
+            KeyCode.SPACE -> jet1Fired = false
+            KeyCode.ENTER -> jet2Fired = false
         }
     }
 
