@@ -2,9 +2,25 @@
 
 Implementation of 1975 Atari game "JetFighter" in JavaFX
 
-## Run
+## Build
+Build with gradle using
+```shell
+./gradlew jar
+```
 
-Run in IntelliJ IDE with gradle run task
+The build .jar will be located in `./build/libs/`
+
+## Run
+### Run with gradle run task
+```shell
+./gradlew run
+```
+
+### Build jar file and execute it
+```shell
+./gradlew jar
+java -jar ./build/libs/JetFighter-1.0-SNAPSHOT.jar
+```
 
 ## Controls
 

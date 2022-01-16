@@ -14,6 +14,9 @@ class JetFighter : Application() {
         const val gameWidth = 320.0 * 2.5
         const val gameHeight = 240.0 * 3
         const val winPoints = 20
+
+        val jetBlackPath = JetFighter::class.java.getResource("jet_black.png")?.toExternalForm()
+        val jetWhitePath = JetFighter::class.java.getResource("jet_white.png")?.toExternalForm()
     }
 
     override fun start(stage: Stage) {
@@ -22,8 +25,8 @@ class JetFighter : Application() {
 
         scene.root.requestFocus()
         stage.title = "JetFighter!"
-        stage.isResizable
-        stage.icons.add(Image(FileInputStream("jet_black.png")))
+        stage.isResizable = false
+        stage.icons.add(Image(jetBlackPath))
         stage.scene = scene
         stage.show()
     }

@@ -67,8 +67,6 @@ class Bullet(val body: Circle, private val dir: Double, private val speed: Doubl
 
 class GameController {
     companion object {
-        private const val jet1ImgPath = "jet_black.png"
-        private const val jet2ImgPath = "jet_white.png"
         private const val jetSpeed = 2.5
         private const val rotSpeed = 0.07
         private const val bulletSpeed = 5.0
@@ -271,8 +269,8 @@ class GameController {
         jet1Score.initialize(jet1ScorePosX, jet1ScorePosY, fontColor = Color.BLACK)
         jet2Score.initialize(jet2ScorePosX, jet2ScorePosY, fontColor = Color.WHITE)
 
-        jet1 = gamePane.spawnJet(jet1InitPosX, jet1InitPosY, rot = rot1, speed = jetSpeed, label = jet1Score, image = Image(FileInputStream(jet1ImgPath)))
-        jet2 = gamePane.spawnJet(jet2InitPosX, jet2InitPosY, rot = rot2, speed = jetSpeed, label = jet2Score, image = Image(FileInputStream(jet2ImgPath)))
+        jet1 = gamePane.spawnJet(jet1InitPosX, jet1InitPosY, rot = rot1, speed = jetSpeed, label = jet1Score, image = Image(JetFighter.jetBlackPath))
+        jet2 = gamePane.spawnJet(jet2InitPosX, jet2InitPosY, rot = rot2, speed = jetSpeed, label = jet2Score, image = Image(JetFighter.jetWhitePath))
 
         statusMsg.initialize(statusMsgPosX, statusMsgPosY, fontColor = Color.WHITE, visible = false)
 
