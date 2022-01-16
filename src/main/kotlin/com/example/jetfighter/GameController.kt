@@ -1,5 +1,6 @@
 package com.example.jetfighter
 
+import com.example.jetfighter.GameController.GameState.*
 import javafx.animation.AnimationTimer
 import javafx.fxml.FXML
 import javafx.scene.control.Label
@@ -87,11 +88,46 @@ class GameController {
     }
 
     // Handles game state changes
-    enum class GameState(private val msg: String) {
-        RUNNING("Running"),
-        PAUSED("Paused"),
-        JET_1_WON("Black won!"),
-        JET_2_WON("White won!");
+    enum class GameState(val msg: String) {
+        RUNNING("Running") {
+            override fun apply(): GameState {
+                timer.start()
+                statusMsg.isVisible = false
+                return this
+            }
+        },
+        PAUSED("Paused") {
+            override fun apply(): GameState {
+                timer.stop()
+                with(statusMsg) {
+                    updateText(msg, statusMsgPosX, statusMsgPosY)
+                    isVisible = true
+                }
+                return this
+            }
+        },
+        JET_1_WON("Black won!") {
+            override fun apply(): GameState {
+                timer.stop()
+                with(statusMsg) {
+                    textFill = Color.BLACK
+                    updateText(msg, statusMsgPosX, statusMsgPosY)
+                    isVisible = true
+                }
+                return this
+            }
+        },
+        JET_2_WON("White won!") {
+            override fun apply(): GameState {
+                timer.stop()
+                with(statusMsg) {
+                    textFill = Color.WHITE
+                    updateText(msg, statusMsgPosX, statusMsgPosY)
+                    isVisible = true
+                }
+                return this
+            }
+        };
 
         companion object {
             lateinit var statusMsg: Label
@@ -103,30 +139,7 @@ class GameController {
             }
         }
 
-        fun newState(gameState: GameState): GameState {
-            when (gameState) {
-                RUNNING -> {
-                    timer.start()
-                    statusMsg.isVisible = false
-                }
-                PAUSED -> {
-                    timer.stop()
-                    with(statusMsg) {
-                        updateText(gameState.msg, statusMsgPosX, statusMsgPosY)
-                        isVisible = true
-                    }
-                }
-                JET_1_WON, JET_2_WON -> {
-                    timer.stop()
-                    with(statusMsg) {
-                        textFill = if (gameState == JET_1_WON) Color.BLACK else Color.WHITE
-                        updateText(gameState.msg, statusMsgPosX, statusMsgPosY)
-                        isVisible = true
-                    }
-                }
-            }
-            return gameState
-        }
+        abstract fun apply(): GameState
     }
 
     var rot1 = Math.toRadians(jet1InitRot)
@@ -139,7 +152,7 @@ class GameController {
     private var rotRight1 = false
     private var rotLeft2 = false
     private var rotRight2 = false
-    private var gameState = GameState.PAUSED
+    private var gameState = PAUSED
 
     @FXML
     private lateinit var gamePane: Pane
@@ -168,7 +181,7 @@ class GameController {
                 if (it.checkCollision(jet2)) {
                     jet1.score++
                     if (jet1.checkWin())
-                        gameState = gameState.newState(GameState.JET_1_WON)
+                        gameState = JET_1_WON.apply()
                     gamePane.destroyBullet(it)
                     bullets1.remove(it)
                 }
@@ -183,7 +196,7 @@ class GameController {
                 if (it.checkCollision(jet1)) {
                     jet2.score++
                     if (jet2.checkWin())
-                        gameState = gameState.newState(GameState.JET_2_WON)
+                        gameState = JET_2_WON.apply()
                     gamePane.destroyBullet(it)
                     bullets2.remove(it)
                 }
@@ -223,13 +236,13 @@ class GameController {
             }
             KeyCode.ESCAPE -> {
                 when (gameState) {
-                    GameState.RUNNING -> gameState = gameState.newState(GameState.PAUSED)
-                    GameState.PAUSED -> gameState = gameState.newState(GameState.RUNNING)
+                    RUNNING -> gameState = PAUSED.apply()
+                    PAUSED -> gameState = RUNNING.apply()
                 }
             }
             KeyCode.R -> {
                 when (gameState) {
-                    GameState.JET_1_WON, GameState.JET_2_WON -> {
+                    JET_1_WON, JET_2_WON -> {
                         gamePane.reset(jet1, jet2, bullets1, bullets2)
                         rot1 = Math.toRadians(jet1InitRot)
                         rot2 = Math.toRadians(jet2InitRot)
@@ -254,7 +267,7 @@ class GameController {
     fun initialize() {
         GameState.init(statusMsg, timer)
 
-        gamePane.initialize()
+        gamePane.initialize(JetFighter.gameWidth, JetFighter.gameHeight)
         jet1Score.initialize(jet1ScorePosX, jet1ScorePosY, fontColor = Color.BLACK)
         jet2Score.initialize(jet2ScorePosX, jet2ScorePosY, fontColor = Color.WHITE)
 
@@ -263,18 +276,18 @@ class GameController {
 
         statusMsg.initialize(statusMsgPosX, statusMsgPosY, fontColor = Color.WHITE, visible = false)
 
-        gameState = gameState.newState(GameState.RUNNING)
+        gameState = RUNNING.apply()
     }
 }
 
 // Extension methods
-fun Pane.initialize() {
-    minHeight = JetFighter.gameHeight
-    minWidth = JetFighter.gameWidth
+fun Pane.initialize(width: Double, height: Double) {
+    minWidth = width
+    minHeight = height
 }
 
 fun Pane.spawnJet(x: Double, y: Double, width: Double = 50.0, height: Double = 50.0, rot: Double, speed: Double, label: Label, image: Image): Jet {
-    val jet = Jet(ImageView(image), x, y, rot, speed, label)
+    val jet = Jet(ImageView(image), x - width / 2, y - height / 2, rot, speed, label)
     with(jet.body) {
         fitHeight = height
         fitWidth = width

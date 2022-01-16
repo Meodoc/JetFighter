@@ -22,7 +22,7 @@ class JetFighter : Application() {
 
         scene.root.requestFocus()
         stage.title = "JetFighter!"
-        stage.isResizable = false
+        stage.isResizable
         stage.icons.add(Image(FileInputStream("jet_black.png")))
         stage.scene = scene
         stage.show()
