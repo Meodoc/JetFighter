@@ -1,25 +1,26 @@
 # JetFighter
 
-Implementation of 1975 Atari game "JetFighter" in JavaFX
+Implementation of 1975 Atari game "JetFighter" in Kotlin with JavaFX
 
-## Build
-Build with gradle using
-```shell
-./gradlew jar
-```
+## Requirements
 
-The build .jar will be located in `./build/libs/`
+- Java version: 15
 
 ## Run
+
 ### Run with gradle run task
+
 ```shell
-./gradlew run
+./gradle run   # Linux, Mac
+./gradlew run  # Windows
 ```
 
 ### Build jar file and execute it
+
 ```shell
-./gradlew jar
-java -jar ./build/libs/JetFighter-1.0-SNAPSHOT.jar
+./gradle jar   # Linux, Mac
+./gradlew jar  # Windows
+java -jar ./build/libs/*.jar
 ```
 
 ## Controls
