@@ -244,6 +244,7 @@ class GameController {
                 when (gameState) {
                     RUNNING -> gameState = PAUSED.apply()
                     PAUSED -> gameState = RUNNING.apply()
+                    else -> {}
                 }
             }
             KeyCode.R -> {
@@ -254,8 +255,10 @@ class GameController {
                         rot2 = Math.toRadians(jet2InitRot)
                         initialize()
                     }
+                    else -> {}
                 }
             }
+            else -> {}
         }
     }
 
@@ -268,6 +271,7 @@ class GameController {
             KeyCode.RIGHT -> jet2RotRight = false
             KeyCode.SPACE -> jet1Fired = false
             KeyCode.ENTER -> jet2Fired = false
+            else -> {}
         }
     }
 
